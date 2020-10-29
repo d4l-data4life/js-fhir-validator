@@ -1,0 +1,25 @@
+{
+  "name": "@d4l/js-codemod-exp",
+  "version": "1.0.0",
+  "description": "codemod experiment",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "build": "npm run build-json-files; npm run generate-validator-scripts",
+    "build:index": "npx ajv compile -s fhir.schema.v401.json -o index.js",
+    "build:test": "node ./scripts/generate-test-scripts.js",
+    "build:stu3": "npm run build-json-files -- stu3; npm run generate-validator-scripts -- stu3",
+    "build:r4": "npm run build",
+    "build-json-files": "node ./scripts/build-json-files.js",
+    "generate-validator-scripts": "node ./scripts/generate-validator-scripts.js"
+  },
+  "dependencies": {
+    "ajv": "^6.12.6"
+  },
+  "devDependencies": {
+    "jest": "^26.6.1",
+    "prettier": "^1.19.1"
+  },
+  "author": "",
+  "license": "MIT"
+}
