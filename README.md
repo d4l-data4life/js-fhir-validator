@@ -2,9 +2,9 @@
 
 Runtime validation for FHIR resources. Exposes resourcetype-specific validators (strongly recommended) or one overall validation function (FHIR 4.0.1 only, caution advised).
 
-## Supported FHIR Versions
+## Supported FHIR versions
 
-This library currently supports FHIR versions 4.0.01 ("R4") and 3.0.1 ("STU3").
+This library currently supports FHIR versions 4.0.01 (R4) and 3.0.1 (STU3).
 
 ## Usage
 Built on top of [AJV's](https://ajv.js.org/) command-line based [pre-compilation feature](https://github.com/ajv-validator/ajv-cli#compile-schemas). Every module is a `validate` function that can be directly called and returns true if the object passes.
@@ -49,13 +49,20 @@ The generated validation functions are huge - between 2 and 4 megabytes before m
 
 ### When should I use the index.js entry point?
 
-Once you need to verify more _than ten different resource types per session_, you can import the repository's entry point (index.js) instead.
+Once you need to validate more _than ten different resource types per session_, you can import the repository's entry point (index.js) instead.
 
 ## Developer hints
 
 ### NPM commands
 
-TBC
+- `test` runs all tests
+- `build` consecutively runs the script to build per-resource JSON files and then per-resource generator scripts for Fhir version R4,
+- `build:test` generates the test files for both STU3 and R4 resources, matching per-resource validation scripts and the official HL7 FHIR examples
+- `build:index` generates single-file validation script index.js
+- `build:stu3` runs the `build` script for the STU3 resources
+- `build:r4` runs the `build` script for the R4 resources, it's an alias for the standard `build` command
+- `build-json-files` executes the script to build JSON schema files per resource. Called by `build`, takes `stu3` or `r4` as a parameter
+- `generate-validator-scripts` executes the script to build JS validation files per resource using `ajv`. Called by `build`, takes `stu3` or `r4` as a parameter
 
 ## Frequently asked Questions
 
