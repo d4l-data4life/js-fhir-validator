@@ -21606,10 +21606,11 @@ var validate = (function() {
               var schema2 = validate.schema.allOf[1].properties.mode.enum;
               var valid2;
               valid2 = false;
-              for (var i2 = 0; i2 < schema2.length; i2++)
-                if (equal(data1, schema2[i2])) {
-                  valid2 = true;
-                  break;
+              for (var i2 = 0; i2 < schema2.length; i2++) {
+                  if (equal(data1, schema2[i2])) {
+                    valid2 = true;
+                    break;
+                }
                 } if (!valid2) {
                 validate.errors = [{
                   keyword: 'enum',

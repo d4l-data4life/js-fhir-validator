@@ -1,7 +1,7 @@
 const fs = require("fs");
 const { execSync } = require("child_process");
 
-["r4"].forEach(fhirVersion => {
+["r4", "stu3"].forEach(fhirVersion => {
   const jsDirectory = `${__dirname}/../${fhirVersion}/js/`;
   const testsDirectory = `${__dirname}/../__tests__/${fhirVersion}/`;
   const jsonDirectory = `${__dirname}/../__tests__/${fhirVersion}-resources/`;
@@ -20,7 +20,7 @@ const { execSync } = require("child_process");
 
   resourcesToTest.forEach(resourceName => {
     const validatorFunctionName = `${resourceName.toLowerCase()}ValidateFunction`;
-    let testString = `const ${validatorFunctionName} = require("../../r4/js/${resourceName}");\n\n`;
+    let testString = `const ${validatorFunctionName} = require("../../${fhirVersion}/js/${resourceName}");\n\n`;
     testString += `describe("${resourceName}", () => {\n`;
     let examplesForThisResource = 0;
     exampleJsonFiles.forEach(exampleJsonFile => {
@@ -30,35 +30,43 @@ const { execSync } = require("child_process");
           `${jsonDirectory}${exampleJsonFile}`,
           "utf-8"
         );
-        const jsonContent = JSON.parse(fileContent);
-        const includesOtherResources =
-          (jsonContent.entry &&
-            Array.isArray(jsonContent.entry) &&
-            jsonContent.entry.some(
-              entryObject =>
-                entryObject.resource &&
-                entryObject.resource.resourceType &&
-                entryObject.resource.resourceType !== resourceName
-            )) ||
-          (jsonContent.contained && jsonContent.contained.length > 0) ||
-          (jsonContent.differential &&
-            Object.keys(jsonContent.differential).length > 0);
-        const hasExtension =
-          jsonContent.extension && jsonContent.extension.length > 0;
-        const isCollectionBundle = jsonContent.type === "collection";
-        const hasIllegalId = jsonContent.id.length > 64;
-        if (
-          !hasIllegalId &&
-          !hasExtension &&
-          !includesOtherResources &&
-          !isCollectionBundle
-        ) {
-          examplesForThisResource += 1;
-          const exampleName = `${resourceName.toLowerCase()}Example${examplesForThisResource}`;
-          testString += `\t test("validate ${exampleJsonFile}", () => {\n`;
-          testString += `\t\t const ${exampleName} = require("../${fhirVersion}-resources/${exampleJsonFile}");\n`;
-          testString += `\t\t expect(${validatorFunctionName}(${exampleName})).toBe(true);\n`;
-          testString += `\t });\n\n`;
+        let hasErrorDuringReading = false;
+        let jsonContent;
+        try {
+          jsonContent = JSON.parse(fileContent);
+        } catch (e) {
+          hasErrorDuringReading = true;
+        }
+        if (!hasErrorDuringReading) {
+          const includesOtherResources =
+            (jsonContent.entry &&
+              Array.isArray(jsonContent.entry) &&
+              jsonContent.entry.some(
+                entryObject =>
+                  entryObject.resource &&
+                  entryObject.resource.resourceType &&
+                  entryObject.resource.resourceType !== resourceName
+              )) ||
+            (jsonContent.contained && jsonContent.contained.length > 0) ||
+            (jsonContent.differential &&
+              Object.keys(jsonContent.differential).length > 0);
+          const hasExtension =
+            jsonContent.extension && jsonContent.extension.length > 0;
+          const isCollectionBundle = jsonContent.type === "collection";
+          const hasIllegalId = jsonContent.id && jsonContent.id.length > 64;
+          if (
+            !hasIllegalId &&
+            !hasExtension &&
+            !includesOtherResources &&
+            !isCollectionBundle
+          ) {
+            examplesForThisResource += 1;
+            const exampleName = `${resourceName.toLowerCase()}Example${examplesForThisResource}`;
+            testString += `\t test("validate ${exampleJsonFile}", () => {\n`;
+            testString += `\t\t const ${exampleName} = require("../${fhirVersion}-resources/${exampleJsonFile}");\n`;
+            testString += `\t\t expect(${validatorFunctionName}(${exampleName})).toBe(true);\n`;
+            testString += `\t });\n\n`;
+          }
         }
       }
     });
