@@ -1,7 +1,9 @@
 const fs = require("fs");
 const { execSync } = require("child_process");
 
+process.stdout.write("Generating test files\n");
 ["r4", "stu3"].forEach(fhirVersion => {
+  process.stdout.write(`\nFHIR version ${fhirVersion}\n`);
   const jsDirectory = `${__dirname}/../${fhirVersion}/js/`;
   const testsDirectory = `${__dirname}/../__tests__/${fhirVersion}/`;
   const jsonDirectory = `${__dirname}/../__tests__/${fhirVersion}-resources/`;
@@ -18,7 +20,7 @@ const { execSync } = require("child_process");
     .readdirSync(jsonDirectory)
     .filter(filename => filename.endsWith(".json"));
 
-  resourcesToTest.forEach(resourceName => {
+  resourcesToTest.forEach((resourceName, index) => {
     const validatorFunctionName = `${resourceName.toLowerCase()}ValidateFunction`;
     let testString = `const ${validatorFunctionName} = require("../../${fhirVersion}/js/${resourceName}");\n\n`;
     testString += `describe("${resourceName}", () => {\n`;
@@ -72,7 +74,15 @@ const { execSync } = require("child_process");
     });
     if (examplesForThisResource !== 0) {
       testString += `});`;
+
+      process.stdout.clearLine();
+      process.stdout.cursorTo(0);
+      process.stdout.write(
+        `Current progress: [${index + 1}/${resourcesToTest.length}]`
+      );
       fs.writeFileSync(`${testsDirectory}${resourceName}.js`, testString);
     }
   });
 });
+
+process.stdout.write(`\nTest file generation done.\n`);

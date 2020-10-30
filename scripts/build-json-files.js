@@ -137,12 +137,16 @@ const fhirJson =
     ? require("../fhir.schema.v401.json")
     : require("../fhir.schema.v301.json");
 
-const resourcesTypes = Object.keys(fhirJson.definitions).filter(
+const resourceTypes = Object.keys(fhirJson.definitions).filter(
   type => !type.includes("_")
 );
 const jsonDirectory = `${__dirname}/../${fhirVersion}/json/`;
 
-resourcesTypes.forEach(resourceType => {
+process.stdout.write(
+  `Generating JSON schema files for ${fhirVersion} resources\n`
+);
+
+resourceTypes.forEach((resourceType, index) => {
   const newJsonForThisType = JSON.parse(JSON.stringify(fhirJson));
   if (newJsonForThisType.discriminator) {
     Object.keys(newJsonForThisType.discriminator.mapping).forEach(
@@ -171,6 +175,12 @@ resourcesTypes.forEach(resourceType => {
     }
   });
 
+  process.stdout.clearLine();
+  process.stdout.cursorTo(0);
+  process.stdout.write(
+    `Current progress: [${index + 1}/${resourceTypes.length}]`
+  );
+
   if (!fs.existsSync(jsonDirectory)) {
     fs.mkdirSync(jsonDirectory, { recursive: true });
   }
@@ -178,4 +188,8 @@ resourcesTypes.forEach(resourceType => {
     `${jsonDirectory}${resourceType}.json`,
     JSON.stringify(newJsonForThisType, null, 2)
   );
+
+  if (index === resourceTypes.length - 1) {
+    process.stdout.write(`\nJSON schema generation done.\n`);
+  }
 });
