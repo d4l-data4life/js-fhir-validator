@@ -6,6 +6,12 @@ Runtime validation for FHIR resources. Exposes resourcetype-specific validators 
 
 This library currently supports FHIR versions 4.0.01 (R4) and 3.0.1 (STU3).
 
+### Bug: Enum-Arrays in some STU 3 versions
+
+The JSON schema definitions for several resources in STU3 results make it impossible to generate a compliant resource under certain conditions and thus will also result in the generated validation functions failing. This includes at least AllergyIntolerance, CapabilityStatement, Composition, DataElement, NutritionOrder, SearchParameter and StructureDefinition.
+
+These resources may contain properties which are given as a given set of one or more strings from a least in an array (such as the modifier property for SearchParameter), but the schema representation and thus any resource with these properties will fail. As a result, these resources are ommitted in our automatic test generation. When using these resources, we recommend checking any potential failing validation and passing it as true if the validation object errors (see below) refer only to this specific property with the error message `should be equal to one of the allowed values`.   
+
 ## Usage
 Built on top of [AJV's](https://ajv.js.org/) command-line based [pre-compilation feature](https://github.com/ajv-validator/ajv-cli#compile-schemas). Every module is a `validate` function that can be directly called and returns true if the object passes.
 
