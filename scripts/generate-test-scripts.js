@@ -1,5 +1,14 @@
 const fs = require("fs");
-const { execSync } = require("child_process");
+
+const SKIP_STU3_TEST_RESOURCES = [
+  "AllergyIntolerance",
+  "CapabilityStatement",
+  "Composition",
+  "DataElement",
+  "NutritionOrder",
+  "SearchParameter",
+  "StructureDefinition"
+];
 
 process.stdout.write("Generating test files\n");
 ["r4", "stu3"].forEach(fhirVersion => {
@@ -14,7 +23,11 @@ process.stdout.write("Generating test files\n");
 
   const resourcesToTest = fs
     .readdirSync(jsDirectory)
-    .map(jsName => jsName.replace(".js", ""));
+    .map(jsName => jsName.replace(".js", ""))
+    .filter(
+      resourceName =>
+        fhirVersion === "r4" || !SKIP_STU3_TEST_RESOURCES.includes(resourceName)
+    );
 
   const exampleJsonFiles = fs
     .readdirSync(jsonDirectory)
