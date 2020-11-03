@@ -1,0 +1,24 @@
+name: Run tests on PR
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - master
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@main
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '14.x'
+          registry-url: https://registry.npmjs.org/
+
+      - name: Test
+        run: |
+          npm ci
+          NODE_ENV=test npm run build:test; npm run test
