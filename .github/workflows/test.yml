@@ -17,6 +17,7 @@ jobs:
         with:
           node-version: '14.x'
           registry-url: https://registry.npmjs.org/
+        run: npm install -g ajv-cli
 
       - name: Build
         run: |
