@@ -1,4 +1,4 @@
-name: Run tests on PR
+name: Build and Test on PR
 on:
   pull_request:
     branches:
@@ -17,6 +17,11 @@ jobs:
         with:
           node-version: '14.x'
           registry-url: https://registry.npmjs.org/
+
+      - name: Build
+        run: |
+          npm ci
+          NODE_ENV=test npm run build
 
       - name: Test
         run: |
