@@ -21,9 +21,7 @@ jobs:
       - name: Build
         run: |
           npm ci
-          NODE_ENV=test npm run build
+          npm run build
 
       - name: Test
-        run: |
-          npm ci
-          NODE_ENV=test npm run build:test; npm run test
+        run: npm run build:test; npm run test
