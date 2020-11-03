@@ -1,4 +1,5 @@
 const fs = require("fs");
+const readline = require("readline");
 
 const FHIR_BASIC_DEFINITIONS = {
   stu3: [
@@ -175,8 +176,8 @@ resourceTypes.forEach((resourceType, index) => {
     }
   });
 
-  process.stdout.clearLine();
-  process.stdout.cursorTo(0);
+  readline.clearLine(process.stdout, 0);
+  readline.cursorTo(process.stdout, 0);
   process.stdout.write(
     `Current progress: [${index + 1}/${resourceTypes.length}]`
   );

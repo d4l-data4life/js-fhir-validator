@@ -1,4 +1,5 @@
 const fs = require("fs");
+const readline = require('readline');
 
 const SKIP_STU3_TEST_RESOURCES = [
   "AllergyIntolerance",
@@ -88,8 +89,8 @@ process.stdout.write("Generating test files\n");
     if (examplesForThisResource !== 0) {
       testString += `});`;
 
-      process.stdout.clearLine();
-      process.stdout.cursorTo(0);
+      readline.clearLine(process.stdout, 0);
+      readline.cursorTo(process.stdout, 0);
       process.stdout.write(
         `Current progress: [${index + 1}/${resourcesToTest.length}]`
       );
