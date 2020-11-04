@@ -78,6 +78,6 @@ Indeed that is a very straightforward way to use a JSON-Schema based validation,
 
 The downside: it requires you to enable `unsafe-eval` in your Consent Security Policies, which is a deal-breaker for many environments and browser default settings.
 
-Why do you not transpile the code to something ES6-friendly with lebab?
+Why do you not transpile the code to something ES6-friendly with [lebab](https://github.com/lebab/lebab)?
 
 Shoutout to lebab, it's a great project! However, using only the "safe" transformations doesn't change much in the generated functions, and using the unsafe ones is, well, unsafe.
