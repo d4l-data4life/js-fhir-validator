@@ -4,20 +4,47 @@ Runtime validation for FHIR resources. Exposes resourcetype-specific validators 
 
 ## Supported FHIR versions
 
-This library currently supports FHIR versions 4.0.01 (R4) and 3.0.1 (STU3).
+This library currently supports FHIR versions 4.0.1 (R4) and 3.0.1 (STU3).
 
-### Bug: Enum-Arrays in some STU 3 versions
+## Limitations
+
+The validation is based on JSON schemata, not on the StructureDefinition files. Not all of the constraints envisioned in FHIR can be implemented through JSON schemata. Limitations include terminology bindings, slicing and FHIRPath invariants.
+
+**Extensions** and **Profiles** are not supported.
+
+### Cross-referenced resources
+
+Many FHIR resources have the ability to include other resources - by way of `contain`, by being a `Bundle` or other collection-like resource or otherwise referencing them. These resources are not supported because it would require every validation function to possibly load every other validation function.
+
+If you use any resources that include other resources in this way, we suggest you validate a copy of your original resource without these included and then recursively validate all included resources, like so (using [lodash](https://lodash.com/docs/4.17.15) functions `cloneDeep` and `omit):
+
+``` const containedResources = cloneDeep(resource.contained);
+     let resourceToValidate = resource;
+     if (containedResources && containedResources.length) {
+       resourceToValidate = omit(resource, ['contained']);
+       await Promise.all(
+         containedResources.map(containedResource => this.validate(containedResource))
+       );
+     }
+```
+
+### Bug: Enum-Arrays in some STU 3 resources
 
 The JSON schema definitions for several resources in STU3 results make it impossible to generate a compliant resource under certain conditions and thus will also result in the generated validation functions failing. This includes at least AllergyIntolerance, CapabilityStatement, Composition, DataElement, NutritionOrder, SearchParameter and StructureDefinition.
 
 These resources may contain properties which are given as a given set of one or more strings from a least in an array (such as the modifier property for SearchParameter), but the schema representation and thus any resource with these properties will fail. As a result, these resources are ommitted in our automatic test generation. When using these resources, we recommend checking any potential failing validation and passing it as true if the validation object errors (see below) refer only to this specific property with the error message `should be equal to one of the allowed values`.   
 
 ## Usage
-Built on top of [AJV's](https://ajv.js.org/) command-line based [pre-compilation feature](https://github.com/ajv-validator/ajv-cli#compile-schemas). Every module is a `validate` function that can be directly called and returns true if the object passes.
+
+Built on top of [AJV's](https://ajv.js.org/) command-line based [pre-compilation feature](https://github.com/ajv-validator/ajv-cli#compile-schemas). You need to install ajv-cli globally before. 
+
+`npm install -g ajv-cli`
+ 
+Every module is a `validate` function that can be directly called and returns true if the object passes.
 
 ### Example
 
-`validateUserSuppliedDiagnosticReport(diagnosticReport) => {
+```validateUserSuppliedDiagnosticReport(diagnosticReport) => {
   import('js-fhir-validator/r4/js/diagnosticreport').then(validatorFunction => {
        // we suggest caching the function in case you want to validate the same resource type multiple times
        const validationResult = validationFunction(diagnosticReport);
@@ -25,30 +52,12 @@ Built on top of [AJV's](https://ajv.js.org/) command-line based [pre-compilation
        if (validationFunction.errors) { // errors are reset after every call
          console.log(...)
        }
-       })
-}`
+   })
+}
+```
 
 ### Finding errors
 The exported module is both a function that can be called as an example as well as an object that contains the JSON schema and the errors collection from its latest call. To read and react to the latest errors, check this property right after the call.
-
-## Constraints
-
-Many FHIR resources have the ability to include other resources - by way of `contain`, by being a `Bundle` or other collection-like resource or otherwise referencing them. These resources are not supported because it would require every validation function to possibly load every other validation function.
-
-If you use any resources that include other resources in this way, we suggest you validate a copy of your original resource without these included and then recursively validate all included resources, like so (using [lodash](https://lodash.com/docs/4.17.15) functions `cloneDeep` and `omit):
-
-` const containedResources = cloneDeep(resource.contained);
-     let resourceToValidate = resource;
-     if (containedResources && containedResources.length) {
-       resourceToValidate = omit(resource, ['contained']);
-       await Promise.all(
-         containedResources.map(containedResource => this.validate(containedResource))
-       );
-     }`
-
-
-**Extensions** are not supported.
-
 
 ## File size considerations
 The generated validation functions are huge - between 2 and 4 MB before minification. This means that there is a significant performance impact to loading and parsing several of these packages. We strongly urge you to consider means of tree-shaking or asynchronous loading for the validation imports.
