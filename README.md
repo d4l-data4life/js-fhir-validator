@@ -35,7 +35,7 @@ The exported module is both a function that can be called as an example as well 
 
 Many FHIR resources have the ability to include other resources - by way of `contain`, by being a `Bundle` or other collection-like resource or otherwise referencing them. These resources are not supported because it would require every validation function to possibly load every other validation function.
 
-If you use any resources that include other resources in this way, we suggest you validate a copy of your originall resource without these included and then recursively validate all included resources, like so (using [lodash](https://lodash.com/docs/4.17.15) functions `cloneDeep` and `omit):
+If you use any resources that include other resources in this way, we suggest you validate a copy of your original resource without these included and then recursively validate all included resources, like so (using [lodash](https://lodash.com/docs/4.17.15) functions `cloneDeep` and `omit):
 
 ` const containedResources = cloneDeep(resource.contained);
      let resourceToValidate = resource;
@@ -51,11 +51,11 @@ If you use any resources that include other resources in this way, we suggest yo
 
 
 ## File size considerations
-The generated validation functions are huge - between 2 and 4 megabytes before minification! This means that there is a significant performance impact to loading and parsing several of these packages. We strongly urge you to consider means of tree-shaking or asynchronous loading for the validation imports.
+The generated validation functions are huge - between 2 and 4 MB before minification. This means that there is a significant performance impact to loading and parsing several of these packages. We strongly urge you to consider means of tree-shaking or asynchronous loading for the validation imports.
 
-### When should I use the index.js entry point?
+###  When to use the index.js entry point
 
-Once you need to validate more _than ten different resource types per session_, you can import the repository's entry point (index.js) instead.
+If you need to validate more _than ten different resource types per session_, you can import the repository's entry point (index.js) instead.
 
 ## Developer hints
 
@@ -70,14 +70,14 @@ Once you need to validate more _than ten different resource types per session_, 
 - `build-json-files` executes the script to build JSON schema files per resource. Called by `build`, takes `stu3` or `r4` as a parameter
 - `generate-validator-scripts` executes the script to build JS validation files per resource using `ajv`. Called by `build`, takes `stu3` or `r4` as a parameter
 
-## Frequently asked Questions
+## Frequently asked questions
 
-Why should I use this over a FHIR json file that AJV parses at runtime?
+Why should I use this repository over a FHIR json file that AJV parses at runtime?
 
-Indeed that is a very straightforward way to use a JSON-Schema based validation, and the way AJV is used most of the time. It would even make it possible to just have one FHIR.json file for all the resources!
+Indeed that is a very straightforward way to use a JSON-Schema based validation, and the way AJV is used most of the time. It would even make it possible to just have one FHIR.json file for all the resources.
 
-The downside: it requires you to enable `unsafe-eval` in your Consent Security Policies, which is a deal-breaker for many environments and browser default settings.
+The downside: You must enable `unsafe-eval` in your content security policies, which is a deal-breaker for many environments and default browser settings.
 
 Why do you not transpile the code to something ES6-friendly with [lebab](https://github.com/lebab/lebab)?
 
-Shoutout to lebab, it's a great project! However, using only the "safe" transformations doesn't change much in the generated functions, and using the unsafe ones is, well, unsafe.
+Shout-out to lebab, it's a great project! However, using only the safe transformations doesn't change much in the generated functions, and using the unsafe ones is, well, unsafe.
