@@ -1,0 +1,44 @@
+name: Publish as npm module
+on:
+  push:
+    branches:
+      - master
+
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '13.x'
+          registry-url: https://registry.npmjs.org/
+
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          ref: master
+
+      - name: Check if version has been updated
+        uses: EndBug/version-check@v1
+        id: check
+        with:
+          diff-search: true
+          file-name: package.json
+
+      - name: Install
+        if: steps.check.outputs.changed == 'true'
+        run: npm ci
+
+      - name: Install AJV-CLI
+        if: steps.check.outputs.changed == 'true'
+        run: npm install -g ajv-cli
+
+      - name: Build
+        run: npm run build
+
+      - name: Publish
+        if: steps.check.outputs.changed == 'true'
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
