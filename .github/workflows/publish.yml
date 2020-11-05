@@ -19,26 +19,16 @@ jobs:
         with:
           ref: main
 
-      - name: Check if version has been updated
-        uses: EndBug/version-check@v1
-        id: check
-        with:
-          diff-search: true
-          file-name: package.json
-
       - name: Install
-        if: steps.check.outputs.changed == 'true'
         run: npm ci
 
       - name: Install AJV-CLI
-        if: steps.check.outputs.changed == 'true'
         run: npm install -g ajv-cli
 
       - name: Build
         run: npm run build
 
       - name: Publish
-        if: steps.check.outputs.changed == 'true'
         run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
