@@ -9,15 +9,12 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@main
+
       - uses: actions/setup-node@v1
         with:
-          node-version: '13.x'
+          node-version: '14.x'
           registry-url: https://registry.npmjs.org/
-
-      - name: Checkout repository
-        uses: actions/checkout@v2
-        with:
-          ref: main
 
       - name: Install AJV-CLI
         run: npm install -g ajv-cli
