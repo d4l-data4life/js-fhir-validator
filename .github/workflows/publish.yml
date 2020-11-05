@@ -2,7 +2,7 @@ name: Publish as npm module
 on:
   push:
     branches:
-      - master
+      - main
 
 
 jobs:
@@ -17,7 +17,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
-          ref: master
+          ref: main
 
       - name: Check if version has been updated
         uses: EndBug/version-check@v1
