@@ -16,14 +16,6 @@ jobs:
           node-version: '14.x'
           registry-url: https://registry.npmjs.org/
 
-      - name: Install AJV-CLI
-        run: npm install -g ajv-cli
-
-      - name: Build
-        run: |
-          npm ci
-          npm run build
-
       - name: Publish
         run: npm publish
         env:
