@@ -1,0 +1,30 @@
+name: Publish as npm module
+on:
+  push:
+    branches:
+      - main
+
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '14.x'
+          registry-url: https://registry.npmjs.org/
+
+      - name: Install AJV-CLI
+        run: npm install -g ajv-cli
+
+      - name: Build
+        run: |
+          npm ci
+          npm run build
+
+      - name: Publish
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_SECRET}}
