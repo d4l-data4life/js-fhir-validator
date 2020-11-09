@@ -1,6 +1,6 @@
 {
   "name": "@d4l/js-fhir-validator",
-  "version": "0.9.0",
+  "version": "1.0.0",
   "description": "Runtime FHIR Validator",
   "main": "index.js",
   "scripts": {
