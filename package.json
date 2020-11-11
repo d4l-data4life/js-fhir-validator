@@ -24,7 +24,6 @@
   },
   "files": [
     "index.js",
-    "__tests__",
     "stu3",
     "r4"
   ],
