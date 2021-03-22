@@ -18,7 +18,7 @@ Many FHIR resources have the ability to include other resources - by way of `con
 
 If you use any resources that include other resources in this way, we suggest you validate a copy of your original resource without these included and then recursively validate all included resources, like so (using [lodash](https://lodash.com/docs/4.17.15) functions `cloneDeep` and `omit):
 
-``` const containedResources = cloneDeep(resource.contained);
+```const containedResources = cloneDeep(resource.contained);
      let resourceToValidate = resource;
      if (containedResources && containedResources.length) {
        resourceToValidate = omit(resource, ['contained']);
@@ -32,14 +32,14 @@ If you use any resources that include other resources in this way, we suggest yo
 
 The JSON schema definitions for several resources in STU3 results make it impossible to generate a compliant resource under certain conditions and thus will also result in the generated validation functions failing. This includes at least AllergyIntolerance, CapabilityStatement, Composition, DataElement, NutritionOrder, SearchParameter and StructureDefinition.
 
-These resources may contain properties which are given as a given set of one or more strings from a least in an array (such as the modifier property for SearchParameter), but the schema representation and thus any resource with these properties will fail. As a result, these resources are ommitted in our automatic test generation. When using these resources, we recommend checking any potential failing validation and passing it as true if the validation object errors (see below) refer only to this specific property with the error message `should be equal to one of the allowed values`.   
+These resources may contain properties which are given as a given set of one or more strings from a least in an array (such as the modifier property for SearchParameter), but the schema representation and thus any resource with these properties will fail. As a result, these resources are ommitted in our automatic test generation. When using these resources, we recommend checking any potential failing validation and passing it as true if the validation object errors (see below) refer only to this specific property with the error message `should be equal to one of the allowed values`.
 
 ## Usage
 
-Built on top of [AJV's](https://ajv.js.org/) command-line based [pre-compilation feature](https://github.com/ajv-validator/ajv-cli#compile-schemas). You need to install ajv-cli globally before. 
+Built on top of [AJV's](https://ajv.js.org/) command-line based [pre-compilation feature](https://github.com/ajv-validator/ajv-cli#compile-schemas). You need to install ajv-cli globally before.
 
 `npm install -g ajv-cli`
- 
+
 Every module is a `validate` function that can be directly called and returns true if the object passes.
 
 ### Example
@@ -57,12 +57,14 @@ Every module is a `validate` function that can be directly called and returns tr
 ```
 
 ### Finding errors
+
 The exported module is both a function that can be called as an example as well as an object that contains the JSON schema and the errors collection from its latest call. To read and react to the latest errors, check this property right after the call.
 
 ## File size considerations
+
 The generated validation functions are huge - between 2 and 4 MB before minification. This means that there is a significant performance impact to loading and parsing several of these packages. We strongly urge you to consider means of tree-shaking or asynchronous loading for the validation imports.
 
-###  When to use the index.js entry point
+### When to use the index.js entry point
 
 If you need to validate more _than ten different resource types per session_, you can import the repository's entry point (index.js) instead.
 
@@ -78,6 +80,10 @@ If you need to validate more _than ten different resource types per session_, yo
 - `build:r4` runs the `build` script for the R4 resources, it's an alias for the standard `build` command
 - `build-json-files` executes the script to build JSON schema files per resource. Called by `build`, takes `stu3` or `r4` as a parameter
 - `generate-validator-scripts` executes the script to build JS validation files per resource using `ajv`. Called by `build`, takes `stu3` or `r4` as a parameter
+
+## Example App
+
+Check out the example app located in the folder `sample-app`. Its readme contains all commands required to run or build locally.
 
 ## Frequently asked questions
 
