@@ -1,6 +1,6 @@
 {
   "name": "@d4l/js-fhir-validator",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Runtime FHIR Validator",
   "main": "index.js",
   "scripts": {
@@ -15,7 +15,7 @@
     "generate-validator-scripts": "node ./scripts/generate-validator-scripts.js"
   },
   "dependencies": {
-    "ajv": "^6.12.6",
+    "ajv": "^7.2.3",
     "terser": "^5.3.8"
   },
   "devDependencies": {

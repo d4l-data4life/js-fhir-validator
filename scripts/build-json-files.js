@@ -149,16 +149,9 @@ process.stdout.write(
 
 resourceTypes.forEach((resourceType, index) => {
   const newJsonForThisType = JSON.parse(JSON.stringify(fhirJson));
-  if (newJsonForThisType.discriminator) {
-    Object.keys(newJsonForThisType.discriminator.mapping).forEach(
-      thisMapping => {
-        if (thisMapping !== resourceType) {
-          // remove other mappings
-          delete newJsonForThisType.discriminator.mapping[thisMapping];
-        }
-      }
-    );
-  }
+  newJsonForThisType["$id"] = newJsonForThisType.id;
+  delete newJsonForThisType.discriminator;
+  delete newJsonForThisType.id;
 
   const ref = `#/definitions/${resourceType}`;
   newJsonForThisType.oneOf = [{ $ref: ref }];
