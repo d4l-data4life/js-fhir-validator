@@ -4,7 +4,7 @@
   "description": "Runtime FHIR Validator",
   "main": "index.js",
   "scripts": {
-    "test": "jest __tests__/r4; jest __tests__/stu3",
+    "test": "jest __tests__/r4 --runInBand; jest __tests__/stu3 --runInBand",
     "build": "npm run build:r4; npm run build:index; npm run build:stu3; npm run compress-files",
     "build:index": "npx ajv compile -s fhir.schema.v401.json -o index.js",
     "build:test": "node ./scripts/generate-test-scripts.js",
