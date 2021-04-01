@@ -4,3 +4,7 @@
 /__tests__/r4/
 /r4/
 /stu3/
+/sample-app/node_modules/
+/fhirValidatorr4.js
+/fhirValidatorstu3.js
+/index.js

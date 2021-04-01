@@ -2,7 +2,7 @@
   <AppSection id="inputregion">
     <label for="source">Your FHIR source</label>
     <textarea name="source" id="source" v-model="source"></textarea>
-    <formgroup>
+    <div class="formgroup">
       <button @click="validate" :disabled="!source || source.length < 10">
         Validate
       </button>
@@ -23,7 +23,7 @@
           v-model="version"
         /><label for="stu3">STU3</label>
       </div>
-    </formgroup>
+    </div>
   </AppSection>
   <AppSection id="resultregion" v-if="result !== null">
     <p v-show="result" class="valid">✅ Valid!</p>
@@ -73,7 +73,6 @@ import "vue-json-pretty/lib/styles.css";
 
 export default defineComponent({
   name: "Validator",
-  // components: { VueJsonPretty, "d4l-button": d4lButton },
   components: { VueJsonPretty, AppSection },
   data: function() {
     return {
@@ -116,7 +115,6 @@ export default defineComponent({
             this.result = false;
           }
           if (validatorModule) {
-            // todo: extension
             const validatorFunction = validatorModule.default;
 
             const validationResult = validatorFunction(sourceAsJson);
@@ -204,14 +202,14 @@ button:disabled {
   background: #faf8f8;
 }
 
-formgroup {
+.formgroup {
   margin-top: 20px;
   display: flex;
   align-items: center;
   justify-content: space-evenly;
 }
 
-formgroup label {
+.formgroup label {
   display: inline;
 }
 
