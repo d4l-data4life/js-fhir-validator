@@ -23,7 +23,7 @@ fs.readdir(jsonDirectory, (err, files) => {
     process.stdout.write(`Current progress: [${index + 1}/${files.length}]`);
 
     execSync(
-      `npx ajv compile -s ${jsonDirectory}${file} -o ${jsDirectory}${jsFileName}`
+      `npx ajv compile --strict=false -s ${jsonDirectory}${file} -o ${jsDirectory}${jsFileName}`
     );
   });
 });
