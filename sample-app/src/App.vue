@@ -17,17 +17,20 @@
     </p>
   </AppSection>
   <Validator />
+  <Footer />
 </template>
 
 <script>
 import Validator from "./components/Validator.vue";
 import AppSection from "./components/Section";
+import Footer from "./components/Footer";
 
 export default {
   name: "App",
   components: {
     Validator,
-    AppSection
+    AppSection,
+    Footer
   }
 };
 </script>
@@ -41,6 +44,11 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: var(--color-primary);
+  height: 100vh;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: space-between;
+  background: #e5e6f2;
 }
 
 body {
