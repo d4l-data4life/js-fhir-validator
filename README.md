@@ -2,6 +2,8 @@
 
 Runtime validation for FHIR resources. Exposes resourcetype-specific validators (strongly recommended) or one overall validation function (FHIR 4.0.1 only, caution advised).
 
+Demo: [https://fhir-validator.d4l.io/](https://fhir-validator.d4l.io/)
+
 ## Supported FHIR versions
 
 This library currently supports FHIR versions 4.0.1 (R4) and 3.0.1 (STU3).
@@ -83,7 +85,9 @@ If you need to validate more _than ten different resource types per session_, yo
 
 ## Example App
 
-Check out the example app located in the folder `sample-app`. Its readme contains all commands required to run or build locally.
+Deployed at [https://fhir-validator.d4l.io/](https://fhir-validator.d4l.io/).
+
+The example app is located in the folder `sample-app`. Its readme contains all commands required to run or build locally.
 
 ## Frequently asked questions
 
