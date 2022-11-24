@@ -22,16 +22,16 @@
 
 <script>
 import Validator from "./components/Validator.vue";
-import AppSection from "./components/Section";
-import Footer from "./components/Footer";
+import AppSection from "./components/Section.vue";
+import Footer from "./components/Footer.vue";
 
 export default {
   name: "App",
   components: {
     Validator,
     AppSection,
-    Footer
-  }
+    Footer,
+  },
 };
 </script>
 
