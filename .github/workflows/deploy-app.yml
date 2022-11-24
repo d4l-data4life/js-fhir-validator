@@ -36,7 +36,7 @@ jobs:
       - name: Build sample 
         run: |
           npm --prefix=./sample-app ci
-          npm --prefix=./sample-app run build
+          BASE_URL="https://d4l-data4life.github.io/js-fhir-validator" npm --prefix=./sample-app run build
       - name: Setup Pages
         uses: actions/configure-pages@v2
       - name: Upload artifact
