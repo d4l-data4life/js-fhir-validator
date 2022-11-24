@@ -33,8 +33,8 @@
       <p
         v-if="
           jsonSource.resourceType === 'Bundle' &&
-            jsonSource.entry &&
-            jsonSource.entry[0].resource
+          jsonSource.entry &&
+          jsonSource.entry[0].resource
         "
       >
         You tried to validate a Bundle resource, but this validator cannot
@@ -65,7 +65,7 @@
 </template>
 
 <script lang="ts">
-import AppSection from "./Section";
+import AppSection from "./Section.vue";
 
 import { defineComponent } from "vue";
 import VueJsonPretty from "vue-json-pretty";
@@ -74,14 +74,14 @@ import "vue-json-pretty/lib/styles.css";
 export default defineComponent({
   name: "Validator",
   components: { VueJsonPretty, AppSection },
-  data: function() {
+  data: function () {
     return {
       source: "",
       version: "r4",
       jsonSource: null,
       simpleError: null,
       jsonErrors: null,
-      result: null
+      result: null,
     };
   },
   methods: {
@@ -108,7 +108,7 @@ export default defineComponent({
           let validatorModule;
           try {
             validatorModule = await import(
-              `@d4l/js-fhir-validator/${this.version}/js/${resourceType}`
+              /* @vite-ignore */ `@d4l/js-fhir-validator/${this.version}/js/${resourceType}`
             );
           } catch (e) {
             this.simpleError = `No validation schema found for resourceType ${resourceType}`;
@@ -127,8 +127,8 @@ export default defineComponent({
           }
         }
       }
-    }
-  }
+    },
+  },
 });
 </script>
 
